@@ -15,7 +15,7 @@ class AppDatabase {
 
   AppDatabase._();
 
-  Database _database;
+  // Database _database;
 
   Future<Database> get database async {
     if (_dbOpenCompleter == null) {
@@ -31,7 +31,7 @@ class AppDatabase {
     final appDocumentDir = await getApplicationDocumentsDirectory();
     final dbPath = path.join(appDocumentDir.path, 'debug.db');
 
-    _database = await databaseFactoryIo.openDatabase(dbPath);
+    final database = await databaseFactoryIo.openDatabase(dbPath);
 
     _dbOpenCompleter.complete(database);
   }
