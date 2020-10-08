@@ -10,23 +10,23 @@ class AccountDao {
   Future<Database> get _db async => AppDatabase.instance.database;
 
   Future insert(Account account) async {
-    await _accountStore.add(await _db, account.toMap());
+    await _accountStore.add(await _db, account.toJson());
   }
 
-  Future delete(Account account) async {
-    final finder = Finder(filter: Filter.byKey(account.id));
+  Future delete(int key) async {
+    final finder = Finder(filter: Filter.byKey(key));
     await _accountStore.delete(await _db, finder: finder);
   }
 
-  Future update(Account account) async {
-    final finder = Finder(filter: Filter.byKey(account.id));
+  Future update(int key, Account account) async {
+    final finder = Finder(filter: Filter.byKey(key));
 
-    await _accountStore.update(await _db, account.toMap(), finder: finder);
+    await _accountStore.update(await _db, account.toJson(), finder: finder);
   }
 
-  Future<List<Account>> getAll() async {
+  Future<Map<int, Account>> getAll() async {
     final finder = Finder(sortOrders: [
-      SortOrder('name'),
+      SortOrder('id'),
     ]);
 
     final recordSnapshots = await _accountStore.find(
@@ -34,11 +34,12 @@ class AccountDao {
       finder: finder,
     );
 
-    return recordSnapshots.map((snapshot) {
-      final account = Account.fromMap(snapshot.value);
-      account.id = snapshot.key;
+    final accountMap = Map<int, Account>();
 
-      return account;
-    }).toList();
+    recordSnapshots.forEach((element) {
+      accountMap[element.key] = Account.fromJson(element.value);
+    });
+
+    return accountMap;
   }
 }

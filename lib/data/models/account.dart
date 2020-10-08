@@ -1,36 +1,22 @@
-import 'package:meta/meta.dart';
+import 'package:flutter/foundation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class Account {
-  // lateinit in dao
-  int id;
+part 'account.g.dart';
+part 'account.freezed.dart';
 
-  final String name;
-  final double initialBalance;
-  final String type;
-  final String createdOn;
+@freezed
+abstract class Account implements _$Account {
+  const Account._();
+  const factory Account({
+    @required String name,
+    @required int type,
+    @required int currency,
+    @required int icon,
+    @required int color,
+    @required String description,
+    @required double initialBalance,
+  }) = _Account;
 
-  Account({
-    @required this.name,
-    @required this.initialBalance,
-    @required this.type,
-    @required this.createdOn,
-  });
-
-  Map<String, dynamic> toMap() {
-    return {
-      'name': name,
-      'initial_balance': initialBalance,
-      'type': type,
-      'created_on': createdOn,
-    };
-  }
-
-  factory Account.fromMap(Map<String, dynamic> map) {
-    return Account(
-      name: map['name'],
-      initialBalance: map['initial_balance'],
-      type: map['type'],
-      createdOn: map['created_on'],
-    );
-  }
+  factory Account.fromJson(Map<String, dynamic> json) =>
+      _$AccountFromJson(json);
 }
